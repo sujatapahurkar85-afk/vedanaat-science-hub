@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vedanaat Science Hub - Explore Learn Create</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>body{background:#070a14;color:#fff}.glass{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(20px)}</style>
+</head>
+<body class="p-4 md:p-6">
+<header class="flex justify-between"><h1 class="font-black text-xl">⚛️ Vedanaat Science Hub</h1><button onclick="document.getElementById('admin').classList.remove('hidden')" class="bg-cyan-400 text-black px-4 py-2 rounded-full font-bold">+ Admin</button></header>
+
+<div class="glass rounded-3xl p-8 mt-6"><h2 class="text-5xl font-black">Explore • Learn • <span class="text-yellow-300">Create.</span></h2><input id="search" onkeyup="render()" placeholder="Search 1000+ projects..." class="mt-6 w-full max-w-xl h-12 px-4 rounded-xl bg-white/10 border border-white/20 outline-none"></div>
+
+<div id="cats" class="grid grid-cols-3 md:grid-cols-6 gap-3 mt-6"></div>
+<div id="list" class="grid md:grid-cols-3 gap-4 mt-6"></div>
+
+<!-- DETAIL -->
+<div id="detail" class="fixed inset-0 bg-black/80 hidden z-40 p-4 overflow-auto"><div class="max-w-2xl mx-auto bg-[#151a33] rounded-2xl p-6"><button onclick="detail.classList.add('hidden')" class="float-right">✕ Close</button><img id="dimg" class="w-full aspect-video object-cover rounded-xl"><h2 id="dtitle" class="text-2xl font-black mt-4"></h2><p id="dcat" class="text-cyan-300"></p><p id="ddesc" class="text-white/60 mt-3"></p></div></div>
+
+<!-- ADMIN -->
+<div id="admin" class="fixed inset-0 bg-black/80 hidden z-50 p-4 overflow-auto"><div class="max-w-xl mx-auto bg-[#151a33] rounded-2xl p-6"><div class="flex justify-between"><h2 class="font-bold text-xl">Admin - Add Project</h2><button onclick="admin.classList.add('hidden')">✕</button></div><input id="atitle" placeholder="Title - e.g. Solar Car" class="mt-4 w-full h-12 px-4 rounded-xl bg-white/10 border border-white/20"><select id="acat" class="mt-3 w-full h-12 px-4 rounded-xl bg-[#151a33] border border-white/20"><option>Physics</option><option>Chemistry</option><option>Biology</option><option>Electronics</option><option>Robotics</option><option>Environment</option></select><input id="aimg" placeholder="Image URL (leave empty = auto)" class="mt-3 w-full h-12 px-4 rounded-xl bg-white/10 border border-white/20"><textarea id="adesc" placeholder="Description" class="mt-3 w-full p-4 rounded-xl bg-white/10 border border-white/20 h-24"></textarea><button onclick="add()" class="mt-4 w-full bg-cyan-400 text-black font-black py-3 rounded-xl">Add Project</button><div id="alist" class="mt-4"></div></div></div>
+
+<script>
+const cats=[{n:'Physics',s:'physics',i:'⚛️'},{n:'Chemistry',s:'chemistry',i:'🧪'},{n:'Biology',s:'biology',i:'🧬'},{n:'Electronics',s:'electronics',i:'🔌'},{n:'Robotics',s:'robotics',i:'🤖'},{n:'Environment',s:'environment',i:'🌱'}];let active='';let my=JSON.parse(localStorage.getItem('vedanaat')||'[]');let base=[];for(let i=0;i<1000;i++){let c=cats[i%6];let t=['Solar Car','Robot Arm','Water Filter','Wind Turbine','DNA Model','Volcano'][i%6];base.push({title:t+' '+(i+1),cat:c.n,slug:c.s,img:'https://picsum.photos/seed/ved'+i+'/400/300',desc:'Build working '+t+' to learn '+c.n, id:i})}
+function getAll(){return [...my,...base]}
+function renderCats(){document.getElementById('cats').innerHTML=cats.map(c=>`<button onclick="active=active==='`+c.s+`'?'': '`+c.s+`';renderCats();render()" class="glass rounded-xl p-4 text-center ${active===c.s?'ring-2 ring-cyan-400':''}"><div class="text-xl">`+c.i+`</div><div class="text-xs font-bold mt-1">`+c.n+`</div></button>`).join('')}
+function render(){let q=document.getElementById('search').value.toLowerCase();let f=getAll().filter(p=>{if(active&&p.slug!==active)return false;if(q&&!p.title.toLowerCase().includes(q))return false;return true}).slice(0,30);document.getElementById('list').innerHTML=f.map(p=>`<div onclick="openD(${p.id})" class="glass rounded-2xl overflow-hidden cursor-pointer"><img src="${p.img}" class="w-full aspect-video object-cover"><div class="p-3"><span class="text-[10px] bg-white/10 px-2 py-1 rounded-full">${p.cat}</span><h3 class="font-bold text-sm mt-2">${p.title}</h3></div></div>`.replace('${p.img}',p.img).replace('${p.cat}',p.cat).replace('${p.title}',p.title)).join('');document.getElementById('alist').innerHTML=my.map((p,i)=>`<div class="flex justify-between bg-white/5 p-2 rounded text-sm"><span>${p.title}</span><button onclick="del(${i})" class="text-red-400">Del</button></div>`).join('')}
+function openD(id){let p=getAll().find(x=>x.id===id);if(!p)return;document.getElementById('detail').classList.remove('hidden');document.getElementById('dimg').src=p.img;document.getElementById('dtitle').innerText=p.title;document.getElementById('dcat').innerText=p.cat;document.getElementById('ddesc').innerText=p.desc}
+function add(){let t=document.getElementById('atitle').value;if(!t)return alert('Title dalo');let o={title:t,cat:document.getElementById('acat').value,slug:document.getElementById('acat').value.toLowerCase(),img:document.getElementById('aimg').value||'https://picsum.photos/seed/'+Date.now()+'/400/300',desc:document.getElementById('adesc').value||'Science Project',id:Date.now()};my.unshift(o);localStorage.setItem('vedanaat',JSON.stringify(my));render();alert('Added!')}
+function del(i){my.splice(i,1);localStorage.setItem('vedanaat',JSON.stringify(my));render()}
+renderCats();render();
+</script>
+</body>
+</html>
