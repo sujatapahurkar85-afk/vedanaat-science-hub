@@ -1,34 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vedanaat Science Hub - Explore Learn Create</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>body{background:#070a14;color:#fff}.glass{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(20px)}</style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vedanaat Science Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{background:#0f111a;color:#e8eaf0;font-family:Inter,sans-serif}
+.hdr{padding:18px 24px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Plus Jakarta Sans';font-weight:800;font-size:20px}
+.hero{margin:0 20px;background:#1a1d2d;border-radius:22px;padding:36px;border:1px solid #242845}
+.hero h1{font-family:'Plus Jakarta Sans';font-size:44px} .y{color:#facc15}
+.search{margin-top:18px;background:#252a40;border:1px solid #343a5a;border-radius:12px;padding:12px 16px;width:100%;max-width:440px;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:20px}
+.card{background:#1a1d2d;border-radius:16px;overflow:hidden;border:1px solid #242845;cursor:pointer;transition:.2s}
+.card:hover{transform:translateY(-3px);border-color:#4b5280}
+.card img{width:100%;height:210px;object-fit:cover}
+.info{padding:12px 14px}.tag{font-size:10px;background:#2a2f4a;padding:4px 8px;border-radius:20px;color:#9aa0b8}
+.info h3{font-size:15px;margin-top:8px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;justify-content:center;align-items:center;z-index:10}
+.modal-bg.on{display:flex}.modal{background:#1e2235;border-radius:18px;max-width:520px;width:92%;overflow:hidden;border:1px solid #3a4166}
+.modal img{width:100%;height:320px;object-fit:cover}.modal-body{padding:18px}
+</style>
 </head>
-<body class="p-4 md:p-6">
-<header class="flex justify-between"><h1 class="font-black text-xl">⚛️ Vedanaat Science Hub</h1><button onclick="document.getElementById('admin').classList.remove('hidden')" class="bg-cyan-400 text-black px-4 py-2 rounded-full font-bold">+ Admin</button></header>
-
-<div class="glass rounded-3xl p-8 mt-6"><h2 class="text-5xl font-black">Explore • Learn • <span class="text-yellow-300">Create.</span></h2><input id="search" onkeyup="render()" placeholder="Search 1000+ projects..." class="mt-6 w-full max-w-xl h-12 px-4 rounded-xl bg-white/10 border border-white/20 outline-none"></div>
-
-<div id="cats" class="grid grid-cols-3 md:grid-cols-6 gap-3 mt-6"></div>
-<div id="list" class="grid md:grid-cols-3 gap-4 mt-6"></div>
-
-<!-- DETAIL -->
-<div id="detail" class="fixed inset-0 bg-black/80 hidden z-40 p-4 overflow-auto"><div class="max-w-2xl mx-auto bg-[#151a33] rounded-2xl p-6"><button onclick="detail.classList.add('hidden')" class="float-right">✕ Close</button><img id="dimg" class="w-full aspect-video object-cover rounded-xl"><h2 id="dtitle" class="text-2xl font-black mt-4"></h2><p id="dcat" class="text-cyan-300"></p><p id="ddesc" class="text-white/60 mt-3"></p></div></div>
-
-<!-- ADMIN -->
-<div id="admin" class="fixed inset-0 bg-black/80 hidden z-50 p-4 overflow-auto"><div class="max-w-xl mx-auto bg-[#151a33] rounded-2xl p-6"><div class="flex justify-between"><h2 class="font-bold text-xl">Admin - Add Project</h2><button onclick="admin.classList.add('hidden')">✕</button></div><input id="atitle" placeholder="Title - e.g. Solar Car" class="mt-4 w-full h-12 px-4 rounded-xl bg-white/10 border border-white/20"><select id="acat" class="mt-3 w-full h-12 px-4 rounded-xl bg-[#151a33] border border-white/20"><option>Physics</option><option>Chemistry</option><option>Biology</option><option>Electronics</option><option>Robotics</option><option>Environment</option></select><input id="aimg" placeholder="Image URL (leave empty = auto)" class="mt-3 w-full h-12 px-4 rounded-xl bg-white/10 border border-white/20"><textarea id="adesc" placeholder="Description" class="mt-3 w-full p-4 rounded-xl bg-white/10 border border-white/20 h-24"></textarea><button onclick="add()" class="mt-4 w-full bg-cyan-400 text-black font-black py-3 rounded-xl">Add Project</button><div id="alist" class="mt-4"></div></div></div>
-
+<body>
+<div class="hdr"><div class="logo">🔬 Vedanaat Science Hub</div><button style="background:#2dd4ff;border:0;padding:8px 18px;border-radius:20px;font-weight:700" onclick="alert('Admin coming soon')">+ Admin</button></div>
+<div class="hero"><h1>Explore • Learn • <span class="y">Create.</span></h1><p style="color:#9aa0b8;margin-top:8px">Showcasing student innovation for 2024 Exhibition</p><input class="search" id="s" placeholder="Search 1000+ projects..." oninput="filt()"></div>
+<div class="grid" id="grid"></div>
+<div class="modal-bg" id="m" onclick="if(event.target.id=='m')this.classList.remove('on')"><div class="modal"><div style="text-align:right;padding:10px"><span style="cursor:pointer" onclick="document.getElementById('m').classList.remove('on')">✕ Close</span></div><img id="mi"><div class="modal-body"><h2 id="mt"></h2><p id="mc" style="color:#2dd4ff;margin:6px 0"></p><p id="md" style="color:#9aa0b8;line-height:1.5"></p></div></div></div>
 <script>
-const cats=[{n:'Physics',s:'physics',i:'⚛️'},{n:'Chemistry',s:'chemistry',i:'🧪'},{n:'Biology',s:'biology',i:'🧬'},{n:'Electronics',s:'electronics',i:'🔌'},{n:'Robotics',s:'robotics',i:'🤖'},{n:'Environment',s:'environment',i:'🌱'}];let active='';let my=JSON.parse(localStorage.getItem('vedanaat')||'[]');let base=[];for(let i=0;i<1000;i++){let c=cats[i%6];let t=['Solar Car','Robot Arm','Water Filter','Wind Turbine','DNA Model','Volcano'][i%6];base.push({title:t+' '+(i+1),cat:c.n,slug:c.s,img:'https://picsum.photos/seed/ved'+i+'/400/300',desc:'Build working '+t+' to learn '+c.n, id:i})}
-function getAll(){return [...my,...base]}
-function renderCats(){document.getElementById('cats').innerHTML=cats.map(c=>`<button onclick="active=active==='`+c.s+`'?'': '`+c.s+`';renderCats();render()" class="glass rounded-xl p-4 text-center ${active===c.s?'ring-2 ring-cyan-400':''}"><div class="text-xl">`+c.i+`</div><div class="text-xs font-bold mt-1">`+c.n+`</div></button>`).join('')}
-function render(){let q=document.getElementById('search').value.toLowerCase();let f=getAll().filter(p=>{if(active&&p.slug!==active)return false;if(q&&!p.title.toLowerCase().includes(q))return false;return true}).slice(0,30);document.getElementById('list').innerHTML=f.map(p=>`<div onclick="openD(${p.id})" class="glass rounded-2xl overflow-hidden cursor-pointer"><img src="${p.img}" class="w-full aspect-video object-cover"><div class="p-3"><span class="text-[10px] bg-white/10 px-2 py-1 rounded-full">${p.cat}</span><h3 class="font-bold text-sm mt-2">${p.title}</h3></div></div>`.replace('${p.img}',p.img).replace('${p.cat}',p.cat).replace('${p.title}',p.title)).join('');document.getElementById('alist').innerHTML=my.map((p,i)=>`<div class="flex justify-between bg-white/5 p-2 rounded text-sm"><span>${p.title}</span><button onclick="del(${i})" class="text-red-400">Del</button></div>`).join('')}
-function openD(id){let p=getAll().find(x=>x.id===id);if(!p)return;document.getElementById('detail').classList.remove('hidden');document.getElementById('dimg').src=p.img;document.getElementById('dtitle').innerText=p.title;document.getElementById('dcat').innerText=p.cat;document.getElementById('ddesc').innerText=p.desc}
-function add(){let t=document.getElementById('atitle').value;if(!t)return alert('Title dalo');let o={title:t,cat:document.getElementById('acat').value,slug:document.getElementById('acat').value.toLowerCase(),img:document.getElementById('aimg').value||'https://picsum.photos/seed/'+Date.now()+'/400/300',desc:document.getElementById('adesc').value||'Science Project',id:Date.now()};my.unshift(o);localStorage.setItem('vedanaat',JSON.stringify(my));render();alert('Added!')}
-function del(i){my.splice(i,1);localStorage.setItem('vedanaat',JSON.stringify(my));render()}
-renderCats();render();
+const projects=[
+{title:"Solar Powered Car",cat:"Physics",img:"https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=600",desc:"Eco-friendly car prototype powered by solar panels. Learn renewable energy."},
+{title:"Robotic Arm",cat:"Robotics",img:"https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800",desc:"Programmable 6-axis robotic arm for automation study using Arduino."},
+{title:"Water Filtration",cat:"Environment",img:"https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600",desc:"Multi-stage filter to purify contaminated water using sand & charcoal."},
+{title:"Volcano Model",cat:"Chemistry",img:"https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600",desc:"Simulated volcanic eruption demonstrating chemistry reaction."},
+{title:"DNA Extraction",cat:"Biology",img:"https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600",desc:"Extracting DNA from fruit using household materials. Biology project."},
+{title:"Smart Home IoT",cat:"Electronics",img:"https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=600",desc:"Automated home system with sensors & app control using Arduino."},
+{title:"Electromagnetic Train",cat:"Physics",img:"https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600",desc:"Superfast train using magnets, battery and copper wire - no fuel!"},
+{title:"Air Pollution Detector",cat:"Environment",img:"https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=600",desc:"DIY air quality monitor using MQ135 sensor and Arduino."},
+{title:"Plant Growth LED",cat:"Biology",img:"https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600",desc:"Study effect of colored lights on plant growth - photosynthesis exp."}
+];
+const grid=document.getElementById('grid');
+function render(list){grid.innerHTML='';list.forEach((p,i)=>{grid.innerHTML+=`<div class=card onclick=openM(${i})><img src=${p.img}><div class=info><span class=tag>${p.cat}</span><h3>${p.title}</h3></div></div>`})}
+function openM(i){const p=projects[i];document.getElementById('mi').src=p.img;document.getElementById('mt').innerText=p.title;document.getElementById('mc').innerText=p.cat;document.getElementById('md').innerText=p.desc;document.getElementById('m').classList.add('on')}
+function filt(){const q=document.getElementById('s').value.toLowerCase();render(projects.filter(p=>p.title.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)))}
+render(projects);
 </script>
 </body>
 </html>
